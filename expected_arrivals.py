@@ -6,11 +6,11 @@ import pandas as pd
 
 
 
-txt_p = r'G:\Raj\PdfExtractor\Raj Chudasama\2022-12-20\ALDFWTP Guest Services\EXPECTED ARRIVALS 12-20-22.txt'
-excel_p = r'G:\Raj\PdfExtractor\Raj Chudasama\2022-12-20\ALDFWTP Guest Services\EXPECTED ARRIVALS 12-20-22.xlsx'
-pdf_p = r'G:\Raj\PdfExtractor\Raj Chudasama\2022-12-20\ALDFWTP Guest Services\EXPECTED ARRIVALS 12-20-22.pdf'
-path1=r'G:\Raj\PdfExtractor\Raj Chudasama\2022-12-20\ALDFWTP Guest Services'
-file1='EXPECTED ARRIVALS 12-20-22'
+txt_p = r'G:\Raj\PdfExtractor\Raj Chudasama\2022-12-21\ALDFWTP Guest Services\EXPECTED ARRIVALS 12-21-22.txt'
+excel_p = r'G:\Raj\PdfExtractor\Raj Chudasama\2022-12-21\ALDFWTP Guest Services\EXPECTED ARRIVALS 12-21-22.xlsx'
+pdf_p = r'G:\Raj\PdfExtractor\Raj Chudasama\2022-12-21\ALDFWTP Guest Services\EXPECTED ARRIVALS 12-21-22.pdf'
+path1=r'G:\Raj\PdfExtractor\Raj Chudasama\2022-12-21\ALDFWTP Guest Services'
+file1='EXPECTED ARRIVALS 12-21-22'
 def pdf2():
     from pdf_to_txt import expectedarrivals
 

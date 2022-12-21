@@ -4,9 +4,9 @@ import pandas as pd
 
 import re
 
-txt_p=r'G:\Raj\PdfExtractor\Raj Chudasama\2022-12-20\Home2 Suites Irving  DFW Aiport\arrivalllandscape_letter.txt'
-excel_p=r'G:\Raj\PdfExtractor\Raj Chudasama\2022-12-20\Home2 Suites Irving  DFW Aiport\arrivalllandscape_letter.xlsx'
-pdf_p=r'G:\Raj\PdfExtractor\Raj Chudasama\2022-12-20\Home2 Suites Irving  DFW Aiport\arrivalllandscape_letter.pdf'
+txt_p=r'G:\Raj\PdfExtractor\Raj Chudasama\2022-12-21\Home2 Suites by Hilton Fort Worth Northlake\arrivalllandscape_letter.txt'
+excel_p=r'G:\Raj\PdfExtractor\Raj Chudasama\2022-12-21\Home2 Suites by Hilton Fort Worth Northlake\arrivalllandscape_letter.xlsx'
+pdf_p=r'G:\Raj\PdfExtractor\Raj Chudasama\2022-12-21\Home2 Suites by Hilton Fort Worth Northlake\arrivalllandscape_letter.pdf'
 
 
 def pdf1():
