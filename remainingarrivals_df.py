@@ -1,104 +1,138 @@
-import camelot
-import pandas as pd
 import datetime
+import re
+import pdfplumber
+import pandas as pd
+
 
 def demo():
 
-    file = r"G:\Raj\PdfExtractor\Raj Chudasama\2022-12-20\Hampton Trophy Club\remaining arrivals 12-20-22.pdf"
+    pdf = pdfplumber.open(r'G:\Raj\PdfExtractor\Raj Chudasama\2022-12-09\Hampton Trophy Club\remaining arrivals.pdf')
 
-    tables = camelot.read_pdf(file, pages='all',encoding="utf-8",flavor='stream', suppress_stdout=False)
-    pages=tables.n
+    page = pdf.pages
 
     data_list=[]
 
-    for i in range(0,pages):
-        df=tables[i].df
+    for p in page:
+        text = p.extract_text()
 
-        for rownum, rowdata in df.iterrows():
+        data=text.split('MARKET ')[1]
 
+        data=data.splitlines()
 
-
-            if '\n' in rowdata[0] and 'TIME' not in rowdata[0]:
-
-
-                df[[0, 1]] = df[0].str.split('\n', 1, expand=True)
-                df = df.fillna('')
-                break
-            elif 'COMPANY NAME' in rowdata[0]:
-                df = df.drop(df.index[0:rownum+2])
-                break
-
-        if i==0:
-            df=df.drop(labels=0)
-        else:
-            df=df
-
-        df=df.reset_index(drop=True)
-
-        for rownum, rowdata in df.iterrows():
-
-            for row in rowdata:
+        for index,d in enumerate(data):
 
 
-                if '/' in row:
+            if '/' in d:
 
+                name=re.findall(r'(.*?)\w{1}\s+\-\s+',d)
+                if name==[]:
+                    name=re.findall(r'(.*?)\s{3}\w{1}\s+\w{1}',d)
 
-                    name=row
+                if name:
+                    name=name[0]
 
-                    con_name=df.iloc[rownum+1,0]
-
-                    tier=df.iloc[rownum, 1]
+                    tier=re.findall(r'(\w{1})(\s{1}\-\s+\d{9})',d)
                     if tier:
-                        tier=tier.split('-')[0]
+                        tier=tier[0][0]
+                    else:
+                        tier=''
 
-                    roomtype=[]
-                    rt1=df.iloc[rownum,4]
-                    rt2=df.iloc[rownum,5]
-                    rt3=df.iloc[rownum,6]
-                    roomtype.append(rt1)
-                    roomtype.append(rt2)
-                    roomtype.append(rt3)
+                    rt = re.findall(r'([A-Z]\s{1}[A-Z]\s{1}\d{3}\s+\w{3,})',d)
+                    if rt==[]:
+                        rt=re.findall(r'([A-Z]\s{1}[A-Z]\s{1}\w{3,})',d)
+                    if rt:
+                        room_type=rt[0].split(' ')[-1]
 
-                    for r in roomtype:
-                        if r=='':
-                            pass
-                        elif r.isdigit()==True:
-                            pass
-                        elif len(r)>=3 and r.isdigit()==False:
-                            room_type=r
+                    d1=data[index+1]
 
+                    com=re.findall(r'(.*?)\d{8}',d1)
+                    if com:
+                        com=com[0]
 
+                    price=re.findall(r'(\$\d+\.\d+)',d1)
+                    if price:
+                        price=price[0]
 
-                    rate_plan=df.iloc[rownum+1,-1]
-                    if '\n' in rate_plan:
+                    rate_plan=d1.split(' ')[-1]
 
-                        rate_plan=rate_plan.split('\n')[0]
-
-                    price=df.iloc[rownum+1,-2]
-
-                    if price =='$0.00':
-                        price = df.iloc[rownum + 1, -3]
-                    elif price=='':
-                        price=df.iloc[rownum+1,-1].split('\n')[1]
-
-                    mian_dict = {
-                        'Guest Name': name,
-                        'Hilton Honor Tier': tier,
-                        'Company': con_name,
-                        'Rate': price,
-                        'Rate Plan': rate_plan,
-                        'Arrival Date': datetime.datetime.today().strftime('%m/%d/%Y'),
-                        'Depart Date': '',
-                        'Room Type': room_type
+                    data_dict={
+                        'Guest Name':name,
+                        'Hilton Honor Tier':tier,
+                        'Company':com,
+                        'Rate':price,
+                        'Rate Plan':rate_plan,
+                        'Arrival Date':datetime.datetime.today().strftime('%m/%d/%Y'),
+                        'Room Type':room_type
                     }
 
-                    print(mian_dict)
+                    data_list.append(data_dict)
 
-                    data_list.append(mian_dict)
-    #
+                    print(data_dict)
+
+        # data=text.split('AUTH')[-1]
+
+        # df = pd.read_csv(StringIO(data), on_bad_lines='skip', sep="\\n",header=None,engine='python')
+        #
+        # main_df_list=[]
+        #
+        # for d, d1 in df.iterrows():
+        #     d2=d1[0]
+        #     df1 = pd.read_csv(StringIO(d2), on_bad_lines='skip', sep=" ", header=None,engine='python')
+        #     main_df_list.append(df1)
+        #
+        # df_merge = pd.concat(main_df_list, ignore_index=True)
+        # df_merge=df_merge.fillna('')
+        # df_merge=df_merge.astype(str)
+        #
+        # for rownum, rowdata in df_merge.iterrows():
+        #
+        #     fd=rowdata[0]
+        #
+        #     dt=is_date(fd)
+        #
+        #     if '/' in fd and dt ==False:
+        #         name = fd
+        #
+        #         tier=df_merge.iloc[rownum,1]
+        #
+        #         con_name = df_merge.iloc[rownum + 1, 0]
+        #         if con_name.isdigit() == True:
+        #             con_name = ''
+        #
+        #         price=df_merge.iloc[rownum+1,2]
+        #         if price=='':
+        #             price=df_merge.iloc[rownum+1,1]
+        #
+        #         rate_plan=df_merge.iloc[rownum+1,6]
+        #         if rate_plan=='':
+        #             rate_plan = df_merge.iloc[rownum + 1, 5]
+        #
+        #         rt=[]
+        #         for i in range(5,9):
+        #
+        #             roomt=df_merge.iloc[rownum,i]
+        #             rt.append(roomt)
+        #
+        #         for j in rt:
+        #             if '.' in j:
+        #                 j=j.split('.')[0]
+        #             if j.isdigit()==False and len(j)>=3:
+        #                 room_type=j
+        #                 break
+        #
+        #         data_dict={
+        #             'Guest Name':name,
+        #             'Hilton Honor Tier':tier,
+        #             'Company':con_name,
+        #             'Rate':price,
+        #             'Rate Plan':rate_plan,
+        #             'Arrival Date':datetime.datetime.today().strftime('%m/%d/%Y'),
+        #             'Room Type':room_type
+        #         }
+        #         data_list.append(data_dict)
 
     df = pd.DataFrame(data_list)
-    df.to_excel(r'G:\Raj\PdfExtractor\Raj Chudasama\2022-12-20\Hampton Trophy Club\remaining arrivals 12-20-22.xlsx')
+    df.to_excel(r'G:\Raj\PdfExtractor\Raj Chudasama\2022-12-09\Hampton Trophy Club\remaining arrivals.xlsx')
 
 
 if __name__ == '__main__':

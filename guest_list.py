@@ -4,7 +4,7 @@ import pandas as pd
 
 def demo():
 
-    file = r"G:\Raj\PdfExtractor\Raj Chudasama\2022-12-21\Hampton Trophy Club\guest all list 12-21-22.pdf"
+    file = r"G:\Raj\PdfExtractor\Raj Chudasama\2022-12-06\Home2 Suites Irving  DFW Aiport\gstlista.pdf"
 
     tables = camelot.read_pdf(file, pages='all',encoding="utf-8",flavor='stream', suppress_stdout=False)
     pages=tables.n
@@ -24,10 +24,6 @@ def demo():
                     df=df.drop(labels=index)
 
                 else:
-
-
-
-
 
                     df.rename(columns=df.iloc[0], inplace = True)
 
@@ -60,7 +56,7 @@ def demo():
 
     print()
 
-    result.to_excel(r'G:\Raj\PdfExtractor\Raj Chudasama\2022-12-21\Hampton Trophy Club\guest all list 12-21-22.xlsx')
+    result.to_excel(r'G:\Raj\PdfExtractor\Raj Chudasama\2022-12-06\Home2 Suites Irving  DFW Aiport\gstlista.xlsx')
 
 
 

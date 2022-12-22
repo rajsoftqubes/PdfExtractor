@@ -8,11 +8,11 @@ from pdfminer.layout import LAParams
 import io
 import os
 import pandas as pd
-file='remaining arrivals 12-19-22'
+file='remaining arrivals 12-21-22'
 
-txt_p = r'G:\Raj\PdfExtractor\Raj Chudasama\2022-12-19\Hampton Trophy Club\remaining arrivals 12-19-22.txt'
-excel_p = r'G:\Raj\PdfExtractor\Raj Chudasama\2022-12-19\Hampton Trophy Club\remaining arrivals 12-19-22.xlsx'
-pdf_p = r'G:\Raj\PdfExtractor\Raj Chudasama\2022-12-19\Hampton Trophy Club\remaining arrivals 12-19-22.pdf'
+txt_p = r'G:\Raj\PdfExtractor\Raj Chudasama\2022-12-21\Hampton Trophy Club\remaining arrivals 12-21-22.txt'
+excel_p = r'G:\Raj\PdfExtractor\Raj Chudasama\2022-12-21\Hampton Trophy Club\remaining arrivals 12-21-22.xlsx'
+pdf_p = r'G:\Raj\PdfExtractor\Raj Chudasama\2022-12-21\Hampton Trophy Club\remaining arrivals 12-21-22.pdf'
 
 
 def demo():
