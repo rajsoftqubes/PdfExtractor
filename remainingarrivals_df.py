@@ -4,9 +4,11 @@ import pdfplumber
 import pandas as pd
 
 
-def demo():
+def remaining_arrivals(file):
 
-    pdf = pdfplumber.open(r'G:\Raj\PdfExtractor\Raj Chudasama\2022-12-09\Hampton Trophy Club\remaining arrivals.pdf')
+    excel_file = file.replace('.pdf', '.xlsx')
+
+    pdf = pdfplumber.open(file)
 
     page = pdf.pages
 
@@ -67,73 +69,9 @@ def demo():
 
                     data_list.append(data_dict)
 
-                    print(data_dict)
-
-        # data=text.split('AUTH')[-1]
-
-        # df = pd.read_csv(StringIO(data), on_bad_lines='skip', sep="\\n",header=None,engine='python')
-        #
-        # main_df_list=[]
-        #
-        # for d, d1 in df.iterrows():
-        #     d2=d1[0]
-        #     df1 = pd.read_csv(StringIO(d2), on_bad_lines='skip', sep=" ", header=None,engine='python')
-        #     main_df_list.append(df1)
-        #
-        # df_merge = pd.concat(main_df_list, ignore_index=True)
-        # df_merge=df_merge.fillna('')
-        # df_merge=df_merge.astype(str)
-        #
-        # for rownum, rowdata in df_merge.iterrows():
-        #
-        #     fd=rowdata[0]
-        #
-        #     dt=is_date(fd)
-        #
-        #     if '/' in fd and dt ==False:
-        #         name = fd
-        #
-        #         tier=df_merge.iloc[rownum,1]
-        #
-        #         con_name = df_merge.iloc[rownum + 1, 0]
-        #         if con_name.isdigit() == True:
-        #             con_name = ''
-        #
-        #         price=df_merge.iloc[rownum+1,2]
-        #         if price=='':
-        #             price=df_merge.iloc[rownum+1,1]
-        #
-        #         rate_plan=df_merge.iloc[rownum+1,6]
-        #         if rate_plan=='':
-        #             rate_plan = df_merge.iloc[rownum + 1, 5]
-        #
-        #         rt=[]
-        #         for i in range(5,9):
-        #
-        #             roomt=df_merge.iloc[rownum,i]
-        #             rt.append(roomt)
-        #
-        #         for j in rt:
-        #             if '.' in j:
-        #                 j=j.split('.')[0]
-        #             if j.isdigit()==False and len(j)>=3:
-        #                 room_type=j
-        #                 break
-        #
-        #         data_dict={
-        #             'Guest Name':name,
-        #             'Hilton Honor Tier':tier,
-        #             'Company':con_name,
-        #             'Rate':price,
-        #             'Rate Plan':rate_plan,
-        #             'Arrival Date':datetime.datetime.today().strftime('%m/%d/%Y'),
-        #             'Room Type':room_type
-        #         }
-        #         data_list.append(data_dict)
-
     df = pd.DataFrame(data_list)
-    df.to_excel(r'G:\Raj\PdfExtractor\Raj Chudasama\2022-12-09\Hampton Trophy Club\remaining arrivals.xlsx')
+    df.to_excel(excel_file,index=False)
 
 
 if __name__ == '__main__':
-    demo()
+    remaining_arrivals()

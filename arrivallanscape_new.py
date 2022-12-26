@@ -4,9 +4,11 @@ import pdfplumber
 import pandas as pd
 
 
-def demo():
+def arrival_landscape(file):
 
-    pdf = pdfplumber.open(r'G:\Raj\PdfExtractor\Raj Chudasama\2022-12-20\Home2 Suites Irving  DFW Aiport\arrivalllandscape_letter.pdf')
+    excel_file=file.replace('.pdf','.xlsx')
+
+    pdf = pdfplumber.open(file)
 
     page = pdf.pages
 
@@ -72,13 +74,10 @@ def demo():
 
                     data_list.append(data_dict)
 
-                    print(data_dict)
+
 
     df = pd.DataFrame(data_list)
-    df.to_excel(r'G:\Raj\PdfExtractor\Raj Chudasama\2022-12-20\Home2 Suites Irving  DFW Aiport\arrivalllandscape_letter.xlsx')
-
-
-
+    df.to_excel(excel_file,index=False)
 
 if __name__ == '__main__':
-    demo()
+    arrival_landscape()

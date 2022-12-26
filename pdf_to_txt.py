@@ -136,9 +136,7 @@ def remainingarivals():
         f.close()
 
 
-def expectedarrivals():
-
-    from expected_arrivals import pdf_p,path1,file1
+def expectedarrivals(pdf_p,path1,file1):
 
     fp = open(pdf_p, 'rb')
     rsrcmgr = PDFResourceManager()

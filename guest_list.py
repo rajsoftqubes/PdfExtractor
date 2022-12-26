@@ -1,10 +1,11 @@
 import  camelot
 import pandas as pd
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
+def guest_list(file):
 
-def demo():
-
-    file = r"G:\Raj\PdfExtractor\Raj Chudasama\2022-12-06\Home2 Suites Irving  DFW Aiport\gstlista.pdf"
+    excel =file.replace('.pdf','.xlsx')
 
     tables = camelot.read_pdf(file, pages='all',encoding="utf-8",flavor='stream', suppress_stdout=False)
     pages=tables.n
@@ -50,13 +51,9 @@ def demo():
         except Exception as e:
             df=''
 
-
-
     result = pd.concat(frames)
+    result.to_excel(excel,index=False)
 
-    print()
-
-    result.to_excel(r'G:\Raj\PdfExtractor\Raj Chudasama\2022-12-06\Home2 Suites Irving  DFW Aiport\gstlista.xlsx')
 
 
 
@@ -66,4 +63,4 @@ def demo():
 
 
 if __name__ == '__main__':
-    demo()
+    guest_list()
