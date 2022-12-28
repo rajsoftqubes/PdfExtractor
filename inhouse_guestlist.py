@@ -25,8 +25,6 @@ def inhouseguests(file,path):
 
             if roomnum:
 
-
-
                 d1 = data[index + 1].split()
 
                 if len(d1)==1:
@@ -46,8 +44,6 @@ def inhouseguests(file,path):
                 d2=d.split(name)
 
                 d3=d2[0].split()
-
-
 
                 roomnum=d3[0]
                 room_type=d3[1]
@@ -77,7 +73,6 @@ def inhouseguests(file,path):
                     city=city[0]
                 else:
                     city=''
-
 
                 main_dict={
 

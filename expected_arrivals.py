@@ -13,7 +13,6 @@ def expected_arrivals(file, path,file_name):
     path1 = path
     file1 = file_name.replace('.pdf','')
 
-
     expectedarrivals(pdf_p,path1,file1)
 
     df = tabula.read_pdf(pdf_p, pages='all',  silent=True)
@@ -152,7 +151,6 @@ def expected_arrivals(file, path,file_name):
 
         x += 1
 
-
     df1 = pd.DataFrame(all_data)
 
     df1.to_excel(excel_p, index=False)
@@ -164,11 +162,9 @@ def expected_arrivals(file, path,file_name):
         with open(fr'{path1}\{file1}{ii}.txt', 'r') as f:
             data=f.read()
 
-
         data=data.replace('\n', ' ')
 
         prices=re.findall(r'(\d+\.\d{2})',data)
-
 
         codes=re.findall(r'(\@\d+)',data)
 
@@ -192,13 +188,9 @@ def expected_arrivals(file, path,file_name):
                     # 3
                     result_df.loc[sqlRun.index, "Rate"] = p
 
-
     result_df.pop('code')
 
     result_df.to_excel(excel_p)
-
-
-
 
 
 if __name__ == '__main__':
