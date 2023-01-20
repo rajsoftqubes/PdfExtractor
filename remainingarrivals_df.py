@@ -73,5 +73,5 @@ def remaining_arrivals(file):
     df.to_excel(excel_file,index=False)
 
 
-if __name__ == '__main__':
-    remaining_arrivals()
+# if __name__ == '__main__':
+#     remaining_arrivals()

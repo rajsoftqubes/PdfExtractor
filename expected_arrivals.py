@@ -5,110 +5,100 @@ import pandas as pd
 from pdf_to_txt import expectedarrivals
 
 
-
-def expected_arrivals(file, path,file_name):
-
-    excel_p = file.replace('.pdf','.xlsx')
+def expected_arrivals(file, path, file_name):
+    excel_p = file.replace('.pdf', '.xlsx')
     pdf_p = file
     path1 = path
-    file1 = file_name.replace('.pdf','')
+    file1 = file_name.replace('.pdf', '')
 
-    expectedarrivals(pdf_p,path1,file1)
+    expectedarrivals(pdf_p, path1, file1)
 
-    df = tabula.read_pdf(pdf_p, pages='all',  silent=True)
+    df = tabula.read_pdf(pdf_p, pages='all', silent=True)
 
     all_data = []
-    x=0
+    x = 0
 
     for d in df:
 
-        d=d.fillna('')
+        d = d.fillna('')
 
-
-        columns=d.columns.to_list()
+        columns = d.columns.to_list()
 
         for rownum, rowdata in d.iterrows():
 
-            for columnnum,column in enumerate(columns):
+            for columnnum, column in enumerate(columns):
 
                 if rowdata[column]:
-
-                    a1=len(rowdata[column].split(' '))
+                    a1 = len(rowdata[column].split(' '))
 
                 try:
-                    asd1=re.findall(r'\@\d{5}',rowdata[column])[0]
+                    asd1 = re.findall(r'\@\d{5}', rowdata[column])[0]
                 except:
-                    asd1=''
+                    asd1 = ''
 
-
-                if  asd1 and a1<=3:
+                if asd1 and a1 <= 3:
 
                     try:
 
-                        roomtype=d.iloc[rownum,columnnum-1]
+                        roomtype = d.iloc[rownum, columnnum - 1]
                         if not roomtype:
-                            roomtype=rowdata[column].split(' ')[0]
+                            roomtype = rowdata[column].split(' ')[0]
                         if int(roomtype):
-                            roomtype=rowdata[column].split(' ')[0]
-
+                            roomtype = rowdata[column].split(' ')[0]
 
                         if not roomtype:
-                            roomtype=rowdata[column].split(' ')[0]
+                            roomtype = rowdata[column].split(' ')[0]
                     except Exception as e:
-                        if roomtype=='':
+                        if roomtype == '':
 
-                            roomtype=d.iloc[rownum,columnnum-1]
+                            roomtype = d.iloc[rownum, columnnum - 1]
                         else:
-                            roomtype=roomtype
+                            roomtype = roomtype
 
-                    rt=re.findall(r'\d+(?:,\d*)?',roomtype)
+                    rt = re.findall(r'\d+(?:,\d*)?', roomtype)
                     if rt:
-                        roomtype=roomtype.split(rt[0])[-1]
+                        roomtype = roomtype.split(rt[0])[-1]
 
                     try:
-                        arrivaldate=d.iloc[rownum+2,columnnum]
+                        arrivaldate = d.iloc[rownum + 2, columnnum]
                     except Exception as e:
                         arrivaldate = ''
 
                     try:
-                        guestname=d.iloc[rownum,d.columns.get_loc('Unnamed: 0')]
+                        guestname = d.iloc[rownum, d.columns.get_loc('Unnamed: 0')]
                         if not guestname:
                             guestname = d.iloc[rownum, d.columns.get_loc("GT Guest Name/ MARSHA#/")]
                     except Exception as e:
 
-                        guestname=d.iloc[rownum,d.columns.get_loc("GT Guest Name/ MARSHA#/")]
+                        guestname = d.iloc[rownum, d.columns.get_loc("GT Guest Name/ MARSHA#/")]
                     try:
 
-                        guestname=re.findall(r'(\w+\, \w+\s\w+)',guestname)[0]
+                        guestname = re.findall(r'(\w+\, \w+\s\w+)', guestname)[0]
                     except:
 
                         guestname = re.findall(r'(\w+\, \w+)', guestname)[0]
 
-                    groupcode=d.iloc[rownum, d.columns.get_loc("Group Code/")]
+                    groupcode = d.iloc[rownum, d.columns.get_loc("Group Code/")]
 
-                    exc_date=d.iloc[rownum, d.columns.get_loc("Exp Dep")]
+                    exc_date = d.iloc[rownum, d.columns.get_loc("Exp Dep")]
                     try:
 
-                        comname=d.iloc[rownum+1, d.columns.get_loc("Group Code/")]
+                        comname = d.iloc[rownum + 1, d.columns.get_loc("Group Code/")]
                     except:
-                        comname=''
+                        comname = ''
 
-                    rate_plan=d.iloc[rownum, d.columns.get_loc("R + Plan/Excx")]
+                    rate_plan = d.iloc[rownum, d.columns.get_loc("R + Plan/Excx")]
                     try:
-                        rate=d.iloc[rownum+1, d.columns.get_loc("R + Plan/Excx")]
+                        rate = d.iloc[rownum + 1, d.columns.get_loc("R + Plan/Excx")]
                     except:
-                        rate=''
+                        rate = ''
 
-                    codes= d.iloc[rownum,columnnum].split('@')[-1]
+                    codes = d.iloc[rownum, columnnum].split('@')[-1]
 
-                    if roomtype=='':
-                        roomtype=d.iloc[rownum,columnnum].split(' ')[0]
+                    if roomtype == '':
+                        roomtype = d.iloc[rownum, columnnum].split(' ')[0]
 
-
-
-                    if arrivaldate=='':
-
-
+                    if arrivaldate == '':
 
                         with open(rf'{path1}\{file1}{x}.txt', 'r') as f:
                             data = f.read()
@@ -117,8 +107,7 @@ def expected_arrivals(file, path,file_name):
 
                         d1 = []
 
-                        arrialdates = re.findall(r'(\@\d{5}  \d{1} \/ \d{2})( \d{2}\-\w{3}\-\d{2})|(\@\d{5} \/ )( \d{2}\-\w{3}\-\d{2})|(\@\d{5}  \d{1} \/ \d{1})( \d{2}\-\w{3}\-\d{2})',
-                            data)
+                        arrialdates = re.findall(r'(\@\d{5}  \d{1} \/ \d{2})( \d{2}\-\w{3}\-\d{2})|(\@\d{5} \/ )( \d{2}\-\w{3}\-\d{2})|(\@\d{5}  \d{1} \/ \d{1})( \d{2}\-\w{3}\-\d{2})',data)
 
                         if arrialdates:
 
@@ -127,9 +116,8 @@ def expected_arrivals(file, path,file_name):
                                     if '-' in j1:
                                         d1.append(j1)
 
-
-                            d12=d1[-1]
-                            arrivaldate=d12
+                            d12 = d1[-1]
+                            arrivaldate = d12
                         else:
                             data1 = data.split(codes)[1].split(guestname)[0]
 
@@ -157,22 +145,22 @@ def expected_arrivals(file, path,file_name):
 
     result_df = pd.read_excel(excel_p)
     result_df = result_df.fillna('')
-    for ii in range(0,len(df)):
+    for ii in range(0, len(df)):
 
         with open(fr'{path1}\{file1}{ii}.txt', 'r') as f:
-            data=f.read()
+            data = f.read()
 
-        data=data.replace('\n', ' ')
+        data = data.replace('\n', ' ')
 
-        prices=re.findall(r'(\d+\.\d{2})',data)
+        prices = re.findall(r'(\d+\.\d{2})', data)
 
-        codes=re.findall(r'(\@\d+)',data)
+        codes = re.findall(r'(\@\d+)', data)
 
         for c1 in codes:
-            c2=c1.replace('@','')
+            c2 = c1.replace('@', '')
             c3 = result_df['code'].isin([int(c2)]).any()
 
-            if c3==False:
+            if c3 == False:
                 codes.remove(c1)
 
         df3 = result_df[result_df['Rate'] == '']
@@ -195,4 +183,3 @@ def expected_arrivals(file, path,file_name):
 
 if __name__ == '__main__':
     expected_arrivals()
-

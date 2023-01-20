@@ -8,7 +8,7 @@ from guest_list import guest_list
 from remainingarrivals_df import remaining_arrivals
 
 
-for i in range(19, 20):
+for i in range(0, 1):
 
     today_date=(datetime.datetime.today()-datetime.timedelta(i)).strftime('%Y-%m-%d')
 

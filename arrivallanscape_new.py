@@ -1,10 +1,11 @@
 import datetime
 import re
-import pdfplumber
+
 import pandas as pd
+import pdfplumber
 
 
-def arrival_landscape(file):
+def arrival_landscape_new(file):
 
     excel_file=file.replace('.pdf','.xlsx')
 
@@ -79,5 +80,5 @@ def arrival_landscape(file):
     df = pd.DataFrame(data_list)
     df.to_excel(excel_file,index=False)
 
-if __name__ == '__main__':
-    arrival_landscape()
+# if __name__ == '__main__':
+#     arrival_landscape(arrival_landscape_new)
