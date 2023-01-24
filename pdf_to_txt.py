@@ -1,20 +1,15 @@
 import datetime
 import re
 
-import pandas as pd
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.pdfpage import PDFPage
-from pdfminer.converter import XMLConverter, HTMLConverter, TextConverter
+from pdfminer.converter import TextConverter
 from pdfminer.layout import LAParams
 import io
-import os
 
 
 def arrivallandscape():
-
-    from arrival_landscape import pdf_p, txt_p
-
-
+    from Old_Scripts.arrival_landscape import pdf_p, txt_p
 
     fp = open(pdf_p, 'rb')
     rsrcmgr = PDFResourceManager()
@@ -34,7 +29,7 @@ def arrivallandscape():
 
                 data = retstr.getvalue()
 
-                ss1 ='\n\n'+ data.split("\n\nAUTH\n\n")[-1]
+                ss1 = '\n\n' + data.split("\n\nAUTH\n\n")[-1]
                 ss = data.split("\nMARKET")[0]
                 text_list = []
 
@@ -56,12 +51,14 @@ def arrivallandscape():
 
             page_no += 1
         f.close()
-def remainingarivals():
-    from remaining_arrivals import pdf_p, txt_p,file
 
-    date=re.findall(r'\d{2}\-\d{2}\-\d+', file)[0].replace('-','/')
+
+def remainingarivals():
+    from Old_Scripts.remaining_arrivals import pdf_p, txt_p, file
+
+    date = re.findall(r'\d{2}\-\d{2}\-\d+', file)[0].replace('-', '/')
     try:
-        date=datetime.datetime.strptime(date,'%m/%d/%y').strftime('%m/%d/%Y')
+        date = datetime.datetime.strptime(date, '%m/%d/%y').strftime('%m/%d/%Y')
     except:
         date = datetime.datetime.strptime(date, '%m/%d/%Y').strftime('%m/%d/%Y')
 
@@ -85,14 +82,12 @@ def remainingarivals():
 
                 data = data.replace('\n', ' ').replace("       ", ' ')
 
-
                 text_list = []
 
                 if page_no == 0:
 
-                    spl=f"MARKET {date}"
+                    spl = f"MARKET {date}"
                     if spl in data:
-
 
                         ss = data.split(spl)[0]
                     else:
@@ -132,8 +127,8 @@ def remainingarivals():
             page_no += 1
         f.close()
 
-def expectedarrivals(pdf_p,path1,file1):
 
+def expectedarrivals(pdf_p, path1, file1):
     fp = open(pdf_p, 'rb')
     rsrcmgr = PDFResourceManager()
     retstr = io.StringIO()
@@ -150,7 +145,7 @@ def expectedarrivals(pdf_p,path1,file1):
 
             data = retstr.getvalue()
 
-            with open(fr'{path1}\{file1}{page_no}.txt','wb') as file:
+            with open(fr'{path1}\{file1}{page_no}.txt', 'wb') as file:
                 file.write(data.encode('utf-8'))
 
             retstr.truncate(0)
@@ -159,5 +154,3 @@ def expectedarrivals(pdf_p,path1,file1):
         page_no += 1
 
     file.close()
-
-

@@ -6,112 +6,142 @@ import datetime
 import os
 import glob
 from expected_arrivals_new import expected_arrivals
+from gstchkin_csv import gstchkin_csv
+from guestlist_csv import guestlist_csv
 from inhouse_guestlist import inhouseguests
 from arrivallanscape_new import arrival_landscape_new
 from guest_list import guest_list
 from remainingarrivals_df import remaining_arrivals
+from utils import mail_sent, logger, today_date, date1, send_log
+
+today_date = today_date
 
 
 def email_automation():
-    with open('property.json', 'r') as myfile:
-        data = myfile.read()
+    logger.info('Script is starting....')
+    try:
+        with open('property.json', 'r') as myfile:
+            data = myfile.read()
 
-    obj = json.loads(data)
+        obj = json.loads(data)
 
-    dir_name = "."
-    test = os.listdir(dir_name)
-    for item in test:
-        if item.endswith(".pdf"):
-            os.remove(os.path.join(dir_name, item))
-    mail = imaplib.IMAP4_SSL("imap.gmail.com", 993)
-    mail.login("no-reply@kriyahotels.com", "dxzxiglcpynssoqd")
-    print("logged in!!")
-    asd=mail.select("Guestlist")
-    print(asd)
+        dir_name = "."
+        test = os.listdir(dir_name)
+        for item in test:
+            if item.endswith(".pdf"):
+                os.remove(os.path.join(dir_name, item))
+        mail = imaplib.IMAP4_SSL("imap.gmail.com", 993)
+        mail.login("no-reply@kriyahotels.com", "dxzxiglcpynssoqd")
 
-    type, data = mail.search(None, 'UNSEEN')
+        mail.select("Guestlist")
 
-    for num in data[0].split():
-        typ, data = mail.fetch(num, '(RFC822)')
-        raw_email = data[0][1]
-        raw_email_string = raw_email.decode('utf-8')
-        email_message = email.message_from_string(raw_email_string)
-        sender_mail = re.findall(r'(\w+\-sales\@kriyahotels.com)', raw_email_string)
+        type, data = mail.search(None, "(ON {0})".format(date1))
+        print(len(data))
+        total_mail=len(data[0].split())
 
-        for s in sender_mail:
-            property_name = obj[s]
-            break
+        for index, num in enumerate(data[0].split()):
+            typ, data = mail.fetch(num, '(RFC822)')
 
-        main_dir = os.getcwd()
-        today_date=(datetime.datetime.today()-datetime.timedelta(0)).strftime('%Y-%m-%d')
-        file_path = f'{main_dir}\\Raj Chudasama\\{today_date}\\{property_name}'
-        print(file_path)
-        if not os.path.exists(file_path):
-            os.makedirs(file_path)
+            raw_email = data[0][1]
 
-        for part in email_message.walk():
-            if part.get_content_maintype() == 'multipart':
-                continue
-            if part.get('Content-Disposition') is None:
-                continue
+            raw_email_string = raw_email.decode('utf-8')
+            email_message = email.message_from_string(raw_email_string)
 
-            global subject
-            fileName = part.get_filename()
-            if bool(fileName):
-                filePath = os.path.join(file_path, fileName)
-                if not os.path.isfile(filePath):
-                    fp = open(filePath, 'wb')
-                    fp.write(part.get_payload(decode=True))
-                    fp.close()
+            sender_mail = re.findall(r'(\w+\-sales\@kriyahotels.com)', raw_email_string)
 
-    fp1 = f'{main_dir}\\Raj Chudasama\\{today_date}\\'
-    if os.path.exists(fp1):
-        main_script()
+            for s in sender_mail:
+                property_name = obj[s]
+                break
+
+            main_dir = os.getcwd()
+
+            file_path = f'{main_dir}\\Raj Chudasama\\{today_date}\\{property_name}'
+            if not os.path.exists(file_path):
+                os.makedirs(file_path)
+
+            for part in email_message.walk():
+                if part.get_content_maintype() == 'multipart':
+                    continue
+                if part.get('Content-Disposition') is None:
+                    continue
+
+                global subject
+
+                fileName = part.get_filename()
+                if bool(fileName):
+                    full_path = os.path.join(file_path, fileName)
+                    if not os.path.isfile(full_path):
+                        fp = open(full_path, 'wb')
+                        fp.write(part.get_payload(decode=True))
+                        fp.close()
+            logger.info(f'PDF files downloaded for {property_name}.')
+            main_functions(file_path, property_name, sender_mail[0])
+
+            if index==total_mail-1:
+                send_log()
+
+    except Exception as e:
+        logger.debug(e)
 
 
-def main_script():
-    for i in range(0, 1):
+def main_functions(file_path, property_name, sender_mail):
+    try:
+        pdf_files = []
+        excel_files = []
+        logger.info(f'Scraping starts for {property_name}.')
 
-        today_date = (datetime.datetime.today() - datetime.timedelta(0)).strftime('%Y-%m-%d')
+        for file in glob.glob(file_path+'\\*'):
+            if '.pdf' in file or '.csv' in file:
 
-        cwd = os.getcwd()
+                file_name = file.split('\\')[-1]
+                logger.info(f'Getting data for {property_name}/{file_name}.')
+                if '.pdf' in file_name:
+                    pdf_files.append(file_name.split('.pdf')[0])
+                elif '.csv' in file_name:
+                    pdf_files.append(file_name.split('.csv')[0])
 
-        path1 = cwd + '\\Raj Chudasama\\' + today_date
+                if file_name.startswith('EXPECTED ARRIVALS') and file_name.endswith(".pdf"):
 
-        arr = os.listdir(path1)
+                    expected_arrivals(file)
+                    logger.info(f'Excel is generated for {property_name}/{file_name}.')
 
-        for dir1 in arr:
+                if file_name.startswith('IN HOUSE') and file_name.endswith(".pdf"):
+                    inhouseguests(file)
+                    logger.info(f'Excel is generated for {property_name}/{file_name}.')
 
-            path2 = path1 + '\\' + dir1
+                if file_name.startswith(('guest', 'gstlist')) and file_name.endswith(".pdf"):
+                    guest_list(file)
+                    logger.info(f'Excel is generated for {property_name}/{file_name}.')
 
-            for file_path in glob.glob(path2 + '\\*.pdf'):
+                if file_name.startswith('arrivalllandscape') and file_name.endswith(".pdf"):
+                    arrival_landscape_new(file)
 
-                file_name = os.path.basename(file_path)
+                    logger.info(f'Excel is generated for {property_name}/{file_name}.')
 
-                if file_name.startswith('EXPECTED ARRIVALS'):
-                    expected_arrivals(file_path, path2)
-                    print('Expected Arrivals generated...', today_date)
+                if file_name.startswith('remaining') and file_name.endswith(".pdf"):
+                    remaining_arrivals(file)
+                    logger.info(f'Excel is generated for {property_name}/{file_name}.')
 
-                if file_name.startswith('IN HOUSE'):
-                    inhouseguests(file_path, path2)
-                    print('In House guest list generated...', today_date)
+                if file_name.startswith('gstchkin') and file_name.endswith(".csv"):
+                    gstchkin_csv(file)
+                    logger.info(f'Excel is generated for {property_name}/{file_name}.')
 
-                if file_name.startswith(('guest', 'gstlist')):
-                    guest_list(file_path)
-                    print('Guest List generated...', today_date)
+                if file_name.startswith('gstlista') and file_name.endswith(".csv"):
+                    guestlist_csv(file)
+                    logger.info(f'Excel is generated for {property_name}/{file_name}.')
 
-                if file_name.startswith('arrivalllandscape'):
-                    arrival_landscape_new(file_path)
-                    print('Arrivals Landscape generated...', today_date)
-
-                if file_name.startswith('remaining'):
-                    remaining_arrivals(file_path)
-                    print('Remining Arrivals generated...', today_date)
-
-                for zippath in glob.iglob(os.path.join(path2, '*.txt')):
+                for zippath in glob.iglob(os.path.join(file_path, '*.txt')):
                     os.remove(zippath)
 
+        for file in glob.glob(file_path + '\\*.xlsx'):
+            excelfile_name = file.split('\\')[-1]
+            excel_files.append(excelfile_name.split('.xlsx')[0])
 
+        logger.info(f'All files are scraped for {property_name}\n')
+
+        mail_sent(file_path, property_name, sender_mail)
+    except Exception as e:
+        logger.debug(e)
 
 
 if __name__ == '__main__':
