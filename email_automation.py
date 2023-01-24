@@ -2,7 +2,6 @@ import email
 import imaplib
 import json
 import re
-import datetime
 import os
 import glob
 from expected_arrivals_new import expected_arrivals
