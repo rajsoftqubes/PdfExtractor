@@ -7,10 +7,19 @@ from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
 
-days=0
+days=1
 
 today_date = (datetime.datetime.today() - datetime.timedelta(days)).strftime('%Y-%m-%d')
 date1=(datetime.datetime.today() - datetime.timedelta(days)).strftime("%d-%b-%Y")
+
+sender_address = 'raj.patel@softqubes.com'
+sender_pass = 'inunrirddnttkjms'
+
+# receiver_address = ['vikas.malaviya@softqubes.com']
+# ccs=[]
+
+receiver_address = ['raj@kriyahotels.com']
+ccs = ['hardik.kanak@softqubes.com']
 
 
 def get_loggger(filename):
@@ -41,11 +50,7 @@ def mail_sent(file_path, property_name, sender_mail):
         logger.info(f'Sending mail for {property_name}')
         mail_content = f'Here is the excel reports for {property_name}'
 
-        sender_address = 'raj.patel@softqubes.com'
-        sender_pass = 'inunrirddnttkjms'
-        receiver_address = ['raj@kriyahotels.com']
 
-        ccs=['hardik.kanak@softqubes.com']
         message = MIMEMultipart()
         message['From'] = sender_address
         message['To'] = ','.join(receiver_address)

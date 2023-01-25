@@ -17,7 +17,7 @@ today_date = today_date
 
 
 def email_automation():
-    logger.info('Script is starting....')
+    logger.info('Script is starting....\n')
     try:
         with open('property.json', 'r') as myfile:
             data = myfile.read()
@@ -35,7 +35,7 @@ def email_automation():
         mail.select("Guestlist")
 
         type, data = mail.search(None, "(ON {0})".format(date1))
-        print(len(data))
+
         total_mail=len(data[0].split())
 
         for index, num in enumerate(data[0].split()):
@@ -77,6 +77,7 @@ def email_automation():
             main_functions(file_path, property_name, sender_mail[0])
 
             if index==total_mail-1:
+
                 send_log()
 
     except Exception as e:
@@ -138,7 +139,7 @@ def main_functions(file_path, property_name, sender_mail):
 
         logger.info(f'All files are scraped for {property_name}')
 
-        # mail_sent(file_path, property_name, sender_mail)
+        mail_sent(file_path, property_name, sender_mail)
     except Exception as e:
         logger.debug(e)
 
