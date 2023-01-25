@@ -43,12 +43,13 @@ def mail_sent(file_path, property_name, sender_mail):
 
         sender_address = 'raj.patel@softqubes.com'
         sender_pass = 'inunrirddnttkjms'
-        receiver_address = 'raj@kriyahotels.com'
+        receiver_address = ['raj@kriyahotels.com']
 
+        ccs=['hardik.kanak@softqubes.com']
         message = MIMEMultipart()
         message['From'] = sender_address
-        message['To'] = receiver_address
-        message['CC'] = 'hardik.kanak@softqubes.com'
+        message['To'] = ','.join(receiver_address)
+        message['Cc'] = ','.join(ccs)
         message['Subject'] = f'Sales Reports for {property_name} : {today_date}'
         message.attach(MIMEText(mail_content, 'plain'))
 
@@ -65,11 +66,10 @@ def mail_sent(file_path, property_name, sender_mail):
         session.starttls()
         session.login(sender_address, sender_pass)
         text = message.as_string()
-        session.sendmail(sender_address, receiver_address, text)
+        session.sendmail(sender_address, (receiver_address+ccs), text)
         session.quit()
 
-        logger.info(f'Mail sent for {property_name}')
-        logger.info('\n')
+        logger.info(f'Mail sent for {property_name}\n')
     except Exception as e:
         logger.debug(e)
 
@@ -81,13 +81,14 @@ def send_log():
 
         sender_address = 'raj.patel@softqubes.com'
         sender_pass = 'inunrirddnttkjms'
-        receiver_address = 'raj@kriyahotels.com'
+        receiver_address = ['raj@kriyahotels.com']
+        ccs = ['hardik.kanak@softqubes.com']
 
         message = MIMEMultipart()
         message['From'] = sender_address
-        message['To'] = receiver_address
-        message['Subject'] = f'Log for : {today_date}'
-        message['CC']='hardik.kanak@softqubes.com'
+        message['To'] = ','.join(receiver_address)
+        message['Cc'] = ','.join(ccs)
+        message['Subject'] = f'Log file for Date : {today_date}'
         message.attach(MIMEText(mail_content, 'plain'))
 
         logfile_name = f'G:\\Raj\\PdfExtractor\\logs\\Log_{today_date}.log'
@@ -104,7 +105,9 @@ def send_log():
         session.starttls()
         session.login(sender_address, sender_pass)
         text = message.as_string()
-        session.sendmail(sender_address, receiver_address, text)
+        session.sendmail(sender_address, (receiver_address+ccs), text)
         session.quit()
+
+        logger.info(f'Log mail sent.')
     except Exception as e:
         logger.debug(e)

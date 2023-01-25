@@ -136,9 +136,9 @@ def main_functions(file_path, property_name, sender_mail):
             excelfile_name = file.split('\\')[-1]
             excel_files.append(excelfile_name.split('.xlsx')[0])
 
-        logger.info(f'All files are scraped for {property_name}\n')
+        logger.info(f'All files are scraped for {property_name}')
 
-        mail_sent(file_path, property_name, sender_mail)
+        # mail_sent(file_path, property_name, sender_mail)
     except Exception as e:
         logger.debug(e)
 

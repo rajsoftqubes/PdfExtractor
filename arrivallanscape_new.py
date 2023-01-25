@@ -24,6 +24,8 @@ def arrival_landscape_new(file):
             text = p.extract_text()
 
             data = text.split('AUTH')[-1]
+            if '/' not in data:
+                data=text.split('AUTH')[-2]
 
             data = data.splitlines()
 
@@ -83,3 +85,7 @@ def arrival_landscape_new(file):
     except Exception as e:
 
         logger.debug(e)
+
+
+file=r'G:\Raj\PdfExtractor\Raj Chudasama\2023-01-24\Home2 Suites by Hilton Dallas Grand Prairie\arrivalllandscape_letter.pdf'
+arrival_landscape_new(file)

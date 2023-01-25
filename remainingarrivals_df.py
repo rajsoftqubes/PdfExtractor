@@ -75,8 +75,6 @@ def remaining_arrivals(file):
         df = pd.DataFrame(data_list)
         df.to_excel(excel_file, index=False)
 
-
-
     except Exception as e:
 
         logger.debug(e)
