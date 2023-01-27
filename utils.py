@@ -7,7 +7,7 @@ from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
 
-days=0
+days=1
 
 today_date = (datetime.datetime.today() - datetime.timedelta(days)).strftime('%Y-%m-%d')
 date1=(datetime.datetime.today() - datetime.timedelta(days)).strftime("%d-%b-%Y")
@@ -29,7 +29,7 @@ def get_loggger(filename):
     logger_formatter = logging.Formatter('[%(asctime)s][%(name)s][Line %(lineno)d]'
                                          '[%(levelname)s]:%(message)s')
 
-    file_handler = logging.FileHandler(f'logs/{filename}.log', mode='w')
+    file_handler = logging.FileHandler(f'logs/{filename}.txt', mode='w')
 
     file_handler.setLevel(logging.DEBUG)
     file_handler.setFormatter(logger_formatter)
@@ -49,7 +49,6 @@ def mail_sent(file_path, property_name, sender_mail):
     try:
         logger.info(f'Sending mail for {property_name}')
         mail_content = f'Here is the excel reports for {property_name}'
-
 
         message = MIMEMultipart()
         message['From'] = sender_address
@@ -86,8 +85,6 @@ def send_log():
 
         sender_address = 'raj.patel@softqubes.com'
         sender_pass = 'inunrirddnttkjms'
-        receiver_address = ['raj@kriyahotels.com']
-        ccs = ['hardik.kanak@softqubes.com']
 
         message = MIMEMultipart()
         message['From'] = sender_address
@@ -96,7 +93,7 @@ def send_log():
         message['Subject'] = f'Log file for Date : {today_date}'
         message.attach(MIMEText(mail_content, 'plain'))
 
-        logfile_name = f'G:\\Raj\\PdfExtractor\\logs\\Log_{today_date}.log'
+        logfile_name = f'G:\\Raj\\PdfExtractor\\logs\\Log_{today_date}.txt'
 
         filename=logfile_name.split('\\')[-1]
 

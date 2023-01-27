@@ -73,6 +73,7 @@ def email_automation():
                         fp = open(full_path, 'wb')
                         fp.write(part.get_payload(decode=True))
                         fp.close()
+
             logger.info(f'PDF files downloaded for {property_name}.')
             main_functions(file_path, property_name, sender_mail[0])
 
@@ -137,9 +138,10 @@ def main_functions(file_path, property_name, sender_mail):
             excelfile_name = file.split('\\')[-1]
             excel_files.append(excelfile_name.split('.xlsx')[0])
 
-        logger.info(f'All files are scraped for {property_name}')
+        if excel_files:
+            logger.info(f'All files are scraped for {property_name}')
 
-        mail_sent(file_path, property_name, sender_mail)
+            mail_sent(file_path, property_name, sender_mail)
     except Exception as e:
         logger.debug(e)
 
