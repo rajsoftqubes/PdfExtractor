@@ -83,7 +83,6 @@ def email_automation():
             if index==total_mail-1:
 
                 send_log()
-                # pass
 
     except Exception as e:
         logger.debug(e)

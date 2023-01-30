@@ -80,9 +80,6 @@ def send_log():
     try:
         mail_content = f"Log for today's pdf extraction"
 
-        sender_address = 'raj.patel@softqubes.com'
-        sender_pass = 'inunrirddnttkjms'
-
         message = MIMEMultipart()
         message['From'] = sender_address
         message['To'] = ','.join(receiver_address)
