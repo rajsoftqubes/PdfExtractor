@@ -57,6 +57,7 @@ def email_automation():
             file_path = f'{main_dir}\\Raj Chudasama\\{today_date}\\{property_name}'
             if not os.path.exists(file_path):
                 os.makedirs(file_path)
+            pdf_files=[]
 
             for part in email_message.walk():
                 if part.get_content_maintype() == 'multipart':
@@ -73,13 +74,16 @@ def email_automation():
                         fp = open(full_path, 'wb')
                         fp.write(part.get_payload(decode=True))
                         fp.close()
+                    pdf_files.append(fileName)
 
-            logger.info(f'PDF files downloaded for {property_name}.')
-            main_functions(file_path, property_name, sender_mail[0])
+            if pdf_files:
+                logger.info(f'PDF files downloaded for {property_name}.')
+                main_functions(file_path, property_name, sender_mail[0])
 
             if index==total_mail-1:
 
                 send_log()
+                # pass
 
     except Exception as e:
         logger.debug(e)
