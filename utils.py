@@ -7,13 +7,13 @@ from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
 
-days=1
+days=0
 
 today_date = (datetime.datetime.today() - datetime.timedelta(days)).strftime('%Y-%m-%d')
 date1=(datetime.datetime.today() - datetime.timedelta(days)).strftime("%d-%b-%Y")
 
 sender_address = 'raj.patel@softqubes.com'
-sender_pass = 'inunrirddnttkjms'
+sender_pass = 'pvbyhrtypexuurro'
 
 # receiver_address = ['vikas.malaviya@softqubes.com']
 # ccs=[]
