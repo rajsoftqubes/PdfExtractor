@@ -15,11 +15,11 @@ date1=(datetime.datetime.today() - datetime.timedelta(days)).strftime("%d-%b-%Y"
 sender_address = 'raj.patel@softqubes.com'
 sender_pass = 'hogxjfiiwosuarus'
 
-receiver_address = ['vikas.malaviya@softqubes.com']
-ccs = ['']
+# receiver_address = ['vikas.malaviya@softqubes.com']
+# ccs = ['']
 
-# receiver_address = ['raj@kriyahotels.com']
-# ccs = ['hardik.kanak@softqubes.com']
+receiver_address = ['raj@kriyahotels.com']
+ccs = ['hardik.kanak@softqubes.com']
 
 
 def get_loggger(filename):
