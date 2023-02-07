@@ -15,11 +15,11 @@ date1=(datetime.datetime.today() - datetime.timedelta(days)).strftime("%d-%b-%Y"
 sender_address = 'raj.patel@softqubes.com'
 sender_pass = 'hogxjfiiwosuarus'
 
-# receiver_address = ['vikas.malaviya@softqubes.com']
-# ccs = ['']
+receiver_address = ['vikas.malaviya@softqubes.com']
+ccs = ['']
 
-receiver_address = ['raj@kriyahotels.com']
-ccs = ['hardik.kanak@softqubes.com']
+# receiver_address = ['raj@kriyahotels.com']
+# ccs = ['hardik.kanak@softqubes.com']
 
 
 def get_loggger(filename):
@@ -78,11 +78,11 @@ def mail_sent(file_path, property_name, sender_mail):
         logger.debug(e)
 
 
-def send_log():
+def send_log(main_dir):
 
     try:
         mail_content = f"Log for today's pdf extraction"
-
+        logger.info(f'Log mail sent.')
         message = MIMEMultipart()
         message['From'] = sender_address
         message['To'] = ','.join(receiver_address)
@@ -90,7 +90,7 @@ def send_log():
         message['Subject'] = f'Log file for Date : {today_date}'
         message.attach(MIMEText(mail_content, 'plain'))
 
-        logfile_name = f'G:\\Raj\\PdfExtractor\\logs\\Log_{today_date}.txt'
+        logfile_name = f'{main_dir}\\logs\\Log_{today_date}.txt'
         filename=logfile_name.split('\\')[-1]
         part = MIMEBase('application', "octet-stream")
         part.set_payload(open(logfile_name, "rb").read())
@@ -103,7 +103,6 @@ def send_log():
         text = message.as_string()
         session.sendmail(sender_address, (receiver_address+ccs), text)
         session.quit()
-        logger.info(f'Log mail sent.')
 
     except Exception as e:
         logger.debug(e)
